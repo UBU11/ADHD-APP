@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/common/ProtectedRoute";
+import ProtectedRoute from "./Components/common/ProtectedRoute";
 import Header from "./components/layout/Header";
 
 function App() {
