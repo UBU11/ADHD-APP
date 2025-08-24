@@ -1,7 +1,8 @@
-const express = require("express");
-const passport = require("passport");
+import express from "express";
+import passport from "passport";
+import authController from "../../controllers/authController.js";
+
 const router = express.Router();
-const authController = require("../../controllers/authController");
 
 // api/auth/
 
@@ -17,18 +18,14 @@ router.get(
   })
 );
 
-
 router.get(
   "/google/callback",
   passport.authenticate("google"),
   authController.googleCallback
 );
 
-
-
 router.get("/logout", authController.logout);
-
 
 router.get("/current_user", authController.getCurrentUser);
 
-module.exports = router;
+export default router;

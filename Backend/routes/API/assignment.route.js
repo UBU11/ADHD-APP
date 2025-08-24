@@ -1,10 +1,11 @@
-const express = require("express");
+import express from "express";
+import assignmentController from "../../controllers/assignmentController.js";
+import requireAuth from "../../middleware/requireAuth.js";
+
 const router = express.Router();
-const assignmentController = require("../../controllers/assignmentController");
-const requireAuth = require("../../middleware/requireAuth");
 
 // api/assignments
 
 router.get("/", requireAuth, assignmentController.getAssignments);
 
-module.exports = router;
+export default router;
