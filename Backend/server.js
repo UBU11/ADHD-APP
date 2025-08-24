@@ -1,0 +1,42 @@
+
+import express from "express";
+import cookieSession from "cookie-session";
+import passport from "passport";
+import cors from "cors";
+import connectDB from "./config/Db.js";
+import authRoutes from "./routes/API/auth.route.js";
+import assignmentRoutes from "./routes/API/assignment.route.js";
+import "./config/passport.js";
+
+
+connectDB();
+
+const app = express();
+
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    keys: [process.env.COOKIE_KEY],
+  })
+);
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.use("/api/auth", authRoutes);
+app.use("/api/assignments", assignmentRoutes);
+
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
