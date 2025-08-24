@@ -1,9 +1,7 @@
-
 import Button from "../components/common/Button";
 
 const Login = () => {
   const handleLogin = () => {
-    // Redirects to the backend Google OAuth route
     window.location.href = "http://localhost:5000/api/auth/google";
   };
 
