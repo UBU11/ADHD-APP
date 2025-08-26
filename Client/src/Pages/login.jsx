@@ -12,7 +12,7 @@ const Login = () => {
           ADHD College Planner
         </h1>
         <p className="text-gray-600 mb-8">
-          Log in to take control of your assignments.
+          Log in to take control of your assignments
         </p>
         <Button onClick={handleLogin}>Login with Google</Button>
       </div>
