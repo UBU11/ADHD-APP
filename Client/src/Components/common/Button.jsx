@@ -9,13 +9,13 @@ const Button = ({ children, onClick, type = "button" }) => {
         py-3
         font-semibold
         text-white
-        bg-indigo-600
+        bg-green-600
         rounded-lg
         shadow-md
         transition-all
         duration-300
         ease-in-out
-        hover:bg-indigo-700
+        hover:bg-green-700
         hover:-translate-y-1
         hover:shadow-lg
         active:scale-95

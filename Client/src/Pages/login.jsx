@@ -7,7 +7,7 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center h-screen -mt-16">
-      <div className="text-center bg-white p-12 rounded-lg shadow-lg">
+      <div className="text-center bg-white p-12 rounded-bl-4xl rounded-tr-4xl shadow-lg">
         <h1 className="text-4xl font-bold mb-4 text-gray-800">
           ADHD College Planner
         </h1>
