@@ -54,7 +54,7 @@ const Header = () => {
                   left-0
                   w-full
                   h-0.5
-                  bg-indigo-600
+                  bg-black
                   transform
                   scale-x-0
                   group-hover:scale-x-100

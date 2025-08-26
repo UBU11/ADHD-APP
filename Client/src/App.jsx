@@ -13,7 +13,7 @@ function App() {
         <Header />
         <main>
           <Routes>
-            {/* <Route path="/" element={<Login />} /> */}
+            <Route path="/" element={<Login />} />
             <Route
               path="/dashboard"
               element={
