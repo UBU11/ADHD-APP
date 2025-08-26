@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const { Schema } = mongoose;
+import { Schema } from "mongoose";
 
 const userSchema = new Schema({
   googleId: String,
@@ -9,4 +9,5 @@ const userSchema = new Schema({
   // googleRefreshToken: String,
 });
 
-export default User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
+export default User;
