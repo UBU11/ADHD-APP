@@ -7,10 +7,13 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id).then((user) => {
-    done(null, user);
-  });
+passport.deserializeUser(async(id, done) => {
+try {
+  const user = await User.findById(id);
+  done(null, user);
+} catch (error) {
+
+}
 });
 
 passport.use(
@@ -22,18 +25,24 @@ passport.use(
       proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({ googleId: profile.id });
+      try {
+        const existingUser = await User.findOne({ googleId: profile.id });
 
-      if (existingUser) {
-        return done(null, existingUser);
+        if (existingUser) {
+          return done(null, existingUser);
+        }
+
+        const user = await new User({
+          googleId: profile.id,
+          displayName: profile.displayName,
+          email: profile.emails[0].value,
+        }).save();
+        done(null, user);
+      } catch (error) {
+        done(error, null);
+        console.error("Error in Google Strategy:", error);
+
       }
-
-      const user = await new User({
-        googleId: profile.id,
-        displayName: profile.displayName,
-        email: profile.emails[0].value,
-      }).save();
-      done(null, user);
     }
   )
 );
