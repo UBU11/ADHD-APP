@@ -11,7 +11,7 @@ const getCurrentUser = (req, res) => {
   res.send(req.user);
 };
 
-export default {
+export const authController = {
   googleCallback,
   logout,
   getCurrentUser,

@@ -1,5 +1,4 @@
 
-import express from "express";
 import cookieSession from "cookie-session";
 import passport from "passport";
 import cors from "cors";
@@ -7,6 +6,7 @@ import connectDB from "./config/Db.js";
 import authRoutes from "./routes/API/auth.route.js";
 import assignmentRoutes from "./routes/API/assignment.route.js";
 import "./config/passport.js";
+import express from "express";
 
 
 connectDB();
@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5000",
     credentials: true,
   })
 );
