@@ -2,6 +2,10 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User from "../models/User.model.js";
+import { config } from "dotenv";
+config({
+  path: "../config/.env"
+});
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -19,7 +23,8 @@ try {
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientID:
+        process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/auth/google/callback",
       proxy: true,
@@ -41,8 +46,8 @@ passport.use(
       } catch (error) {
         done(error, null);
         console.error("Error in Google Strategy:", error);
-
       }
     }
   )
 );
+
