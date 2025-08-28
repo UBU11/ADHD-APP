@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import api from "../services/api";
 
 const Dashboard = () => {
+  console.log("--- Dashboard Component has mounted! ---");
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  console.log("API base URL:", api.defaults.baseURL);
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
         const response = await api.get("/assignments");
+        console.log("Assignments fetched:", response.data);
         setAssignments(response.data);
       } catch (err) {
         setError("Failed to fetch assignments.");
@@ -23,7 +25,7 @@ const Dashboard = () => {
   }, []);
 
   if (loading)
-    return <p className="text-center mt-8">Loading assignments...</p>;
+    return <p className="text-center mt-14">Loading assignments...</p>;
   if (error) return <p className="text-center mt-8 text-red-500">{error}</p>;
 
   return (

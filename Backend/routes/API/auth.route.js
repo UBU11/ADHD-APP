@@ -30,7 +30,7 @@ router.get("/google/callback", (req, res, next) => {
         return next(err);
       }
 
-      return res.redirect("/dashboard");
+      return res.redirect("http://localhost:5173/dashboard");
     });
   })(req, res, next);
 });
