@@ -5,7 +5,6 @@ import requireAuth from "../../middleware/requireAuth.js";
 const router = express.Router();
 
 // api/assignments
-
 router.get("/", requireAuth, getAssignments);
 
 export default router;

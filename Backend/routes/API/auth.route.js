@@ -5,7 +5,6 @@ import { authController } from "../../controllers/AuthController.js";
 const router = express.Router();
 
 // api/auth/
-
 router.get(
   "/google",
   passport.authenticate("google", {
@@ -18,11 +17,24 @@ router.get(
   })
 );
 
-router.get(
-  "/google/callback",
-  passport.authenticate("google"),
-  authController.googleCallback
-);
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.redirect("/");
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      return res.redirect("/dashboard");
+    });
+  })(req, res, next);
+});
+
 
 router.get("/logout", authController.logout);
 
