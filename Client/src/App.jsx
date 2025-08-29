@@ -1,11 +1,10 @@
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import ProtectedRoute from "./Components/common/ProtectedRoute";
+import Header from "./components/layout/Header";
+import CalendarPage from "./Pages/CalenderPage";
 import Dashboard from "./Pages/Dashboard";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./Components/common/ProtectedRoute";
-import Header from "./components/layout/Header";
-
 function App() {
   return (
     <Router>
@@ -19,6 +18,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/calendar"
+              element={
+                <ProtectedRoute>
+                  <CalendarPage />
                 </ProtectedRoute>
               }
             />
