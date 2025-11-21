@@ -23,11 +23,11 @@ export const ClassroomView = () => {
     };
 
     const urgencyColors = {
-        overdue: 'bg-comic-red text-white',
-        critical: 'bg-yellow-400 text-black',
+        overdue: 'bg-comic-red text-black',
+        critical: 'bg-comic-yellow text-black',
         high: 'bg-orange-400 text-black',
-        normal: 'bg-comic-blue text-white',
-        none: 'bg-gray-400 text-white'
+        normal: 'bg-comic-blue text-black',
+        none: 'bg-gray-400 text-black'
     };
 
     const toggleCourse = (courseId: string) => {
@@ -66,7 +66,7 @@ export const ClassroomView = () => {
                         </p>
                     </div>
                     <div className="comic-card bg-comic-blue px-6 py-3">
-                        <p className="text-2xl font-comic text-white">
+                        <p className="text-2xl font-comic text-black">
                             {filteredAssignments.length} {filteredAssignments.length === 1 ? 'Assignment' : 'Assignments'}
                         </p>
                     </div>
@@ -74,7 +74,7 @@ export const ClassroomView = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setShowCourseSelector(!showCourseSelector)}
-                        className="comic-button bg-comic-red text-white px-6 py-3"
+                        className="comic-button bg-comic-red text-black px-6 py-3"
                     >
                         {showCourseSelector ? 'Hide' : 'Select'} Courses
                     </motion.button>
@@ -94,13 +94,13 @@ export const ClassroomView = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={selectAllCourses}
-                                    className="px-4 py-2 bg-comic-blue text-white border-2 border-black rounded-lg font-body font-bold hover:bg-blue-600 transition-colors"
+                                    className="px-4 py-2 bg-comic-blue text-black border-2 border-black rounded-lg font-body font-bold hover:bg-blue-600 transition-colors"
                                 >
                                     Select All
                                 </button>
                                 <button
                                     onClick={deselectAllCourses}
-                                    className="px-4 py-2 bg-gray-400 text-white border-2 border-black rounded-lg font-body font-bold hover:bg-gray-500 transition-colors"
+                                    className="px-4 py-2 bg-gray-400 text-black border-2 border-black rounded-lg font-body font-bold hover:bg-gray-500 transition-colors"
                                 >
                                     Deselect All
                                 </button>
@@ -114,8 +114,8 @@ export const ClassroomView = () => {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => toggleCourse(course.id)}
                                     className={`p-4 border-4 border-black rounded-lg font-body font-bold text-left transition-all ${selectedCourseIds.includes(course.id)
-                                            ? 'bg-comic-yellow text-comic-dark'
-                                            : 'bg-gray-200 text-gray-600'
+                                        ? 'bg-comic-yellow text-comic-dark'
+                                        : 'bg-gray-200 text-gray-600'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between">
@@ -164,7 +164,7 @@ export const ClassroomView = () => {
                                     <div className="flex items-start justify-between mb-3">
                                         <BookOpen size={32} className="stroke-[3] text-comic-dark" />
                                         {course.section && (
-                                            <span className="bg-black text-white px-3 py-1 rounded-full text-sm font-body font-bold">
+                                            <span className="bg-yellow-300 text-black px-3 py-1 rounded-full text-sm font-body font-bold border-2 border-black">
                                                 {course.section}
                                             </span>
                                         )}
@@ -181,7 +181,7 @@ export const ClassroomView = () => {
                                         href={`https://classroom.google.com/c/${course.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 bg-comic-blue text-white px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-blue-600 transition-colors"
+                                        className="inline-flex items-center gap-2 bg-comic-blue text-black px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-blue-600 transition-colors"
                                     >
                                         <ExternalLink size={18} />
                                         Open in Classroom
@@ -271,7 +271,7 @@ export const ClassroomView = () => {
                                             href={`https://classroom.google.com/c/${assignment.courseId}/a/${assignment.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 bg-comic-red text-white px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-red-600 transition-colors mt-4"
+                                            className="inline-flex items-center gap-2 bg-comic-red text-black px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-red-600 transition-colors mt-4"
                                         >
                                             <ExternalLink size={18} />
                                             Submit in Classroom
@@ -311,7 +311,7 @@ export const ClassroomView = () => {
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: idx * 0.05 }}
                                         whileHover={{ scale: 1.05, rotate: -1 }}
-                                        className="comic-card bg-gradient-to-br from-comic-blue to-blue-400 p-6 text-white"
+                                        className="comic-card bg-gradient-to-br from-comic-blue to-blue-400 p-6 text-black"
                                     >
                                         <h3 className="text-xl font-comic mb-2">
                                             {material.title}

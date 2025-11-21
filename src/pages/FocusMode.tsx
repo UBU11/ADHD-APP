@@ -150,7 +150,7 @@ export const FocusMode = () => {
                         {isTimerRunning ? <Pause size={40} className="stroke-[3]" /> : <Play size={40} className="stroke-[3]" />}
                     </button>
 
-                    <button className="p-6 rounded-full bg-comic-red text-white border-4 border-black shadow-comic hover:scale-110 transition-all">
+                    <button className="p-6 rounded-full bg-comic-red text-black border-4 border-black shadow-comic hover:scale-110 transition-all">
                         <CheckCircle size={40} className="stroke-[3]" />
                     </button>
                 </div>

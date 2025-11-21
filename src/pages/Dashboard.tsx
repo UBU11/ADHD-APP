@@ -45,8 +45,8 @@ const TaskCard = ({ item, index }: { item: PrioritizedItem; index: number }) => 
     const navigate = useNavigate();
 
     const urgencyStyles = {
-        critical: 'bg-comic-red text-white',
-        high: 'bg-orange-500 text-white',
+        critical: 'bg-comic-red text-black',
+        high: 'bg-orange-500 text-black',
         medium: 'bg-comic-yellow text-black',
         low: 'bg-comic-blue text-black',
     };
@@ -65,7 +65,7 @@ const TaskCard = ({ item, index }: { item: PrioritizedItem; index: number }) => 
             <div className="p-6 pl-10 flex justify-between items-center">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-0.5 border-2 border-black text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0_#000] ${item.type === 'event' ? 'bg-purple-400 text-white' : 'bg-cyan-400 text-black'}`}>
+                        <span className={`px-2 py-0.5 border-2 border-black text-xs font-bold uppercase tracking-wider shadow-[2px_2px_0_#000] ${item.type === 'event' ? 'bg-purple-400 text-black' : 'bg-cyan-400 text-black'}`}>
                             {item.type}
                         </span>
                         {item.urgency === 'critical' && (
@@ -106,7 +106,7 @@ export const Dashboard = () => {
                 </div>
                 <div className="hidden md:block">
                     <div className="w-24 h-24 bg-comic-blue rounded-full border-4 border-black flex items-center justify-center shadow-comic animate-bounce">
-                        <Zap size={48} className="stroke-[3] text-white" />
+                        <Zap size={48} className="stroke-[3] text-black" />
                     </div>
                 </div>
             </header>
@@ -121,7 +121,7 @@ export const Dashboard = () => {
                 {prioritizedItems.length === 0 && (
                     <div className="text-center py-20">
                         <div className="inline-block p-6 rounded-full bg-comic-blue border-4 border-black shadow-comic mb-6 animate-pulse">
-                            <ShieldCheck size={64} className="stroke-[2.5] text-white" />
+                            <ShieldCheck size={64} className="stroke-[2.5] text-black" />
                         </div>
                         <h2 className="text-4xl font-comic text-comic-dark mb-2">SECTOR CLEAR!</h2>
                         <p className="text-xl font-bold">No active threats. Patrol complete.</p>

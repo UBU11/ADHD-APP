@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Brain } from 'lucide-react';
 import { initGoogleAuth, requestAccessToken, fetchCalendarEvents, fetchTasks, fetchCourses, fetchCourseWork, fetchCourseMaterials } from '../services/googleApi';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
@@ -111,7 +110,8 @@ export const Login = () => {
                     whileHover={{ scale: 1.1, rotate: 10 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="w-24 h-24 bg-comic-red border-4 border-black rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-comic-sm text-white cursor-pointer"
+                    className="w-32 h-32 border-4 border-black rounded-full flex items-center justify-center mx-auto mb-6 shadow-comic-sm overflow-hidden cursor-pointer"
+                    style={{ backgroundColor: '#8B7355' }}
                 >
                     <motion.div
                         animate={{
@@ -123,8 +123,9 @@ export const Login = () => {
                             repeat: Infinity,
                             ease: "easeInOut"
                         }}
+                        className="w-full h-full"
                     >
-                        <Brain size={48} className="stroke-[2.5]" />
+                        <img src="/sloth.svg" alt="ADHD Dashboard Logo" className="w-full h-full object-cover" />
                     </motion.div>
                 </motion.div>
 
@@ -160,6 +161,6 @@ export const Login = () => {
                     Connect!
                 </motion.button>
             </motion.div>
-        </div>
+        </div >
     );
 };

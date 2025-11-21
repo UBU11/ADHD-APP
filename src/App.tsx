@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 function App() {
-  const { isDarkMode, isLoading } = useAppStore();
+  const { isDarkMode, isLoading, isInitialized } = useAppStore();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -27,41 +27,45 @@ function App() {
     }
   }, [isDarkMode]);
 
+  const showPreloader = !isInitialized || isLoading;
+
   return (
     <>
       <AnimatePresence>
-        {isLoading && <Preloader />}
+        {showPreloader && <Preloader />}
       </AnimatePresence>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          } />
-          <Route path="/focus" element={
-            <PrivateRoute>
-              <FocusMode />
-            </PrivateRoute>
-          } />
-          <Route path="/calendar" element={
-            <PrivateRoute>
-              <CalendarView />
-            </PrivateRoute>
-          } />
-          <Route path="/classroom" element={
-            <PrivateRoute>
-              <ClassroomView />
-            </PrivateRoute>
-          } />
-          <Route path="/settings" element={
-            <PrivateRoute>
-              <Settings />
-            </PrivateRoute>
-          } />
-        </Routes>
-      </BrowserRouter>
+      {!showPreloader && (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            } />
+            <Route path="/focus" element={
+              <PrivateRoute>
+                <FocusMode />
+              </PrivateRoute>
+            } />
+            <Route path="/calendar" element={
+              <PrivateRoute>
+                <CalendarView />
+              </PrivateRoute>
+            } />
+            <Route path="/classroom" element={
+              <PrivateRoute>
+                <ClassroomView />
+              </PrivateRoute>
+            } />
+            <Route path="/settings" element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            } />
+          </Routes>
+        </BrowserRouter>
+      )}
     </>
   );
 }

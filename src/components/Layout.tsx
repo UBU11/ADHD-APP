@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Zap, LogOut, GraduationCap } from 'lucide-react';
+import { LayoutDashboard, Calendar, LogOut, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../store/useAppStore';
 import { NotificationManager } from './NotificationManager';
@@ -13,7 +13,7 @@ const NavItem = ({ to, icon: Icon, label, active }: { to: string; icon: any; lab
             }`}>
             <Icon size={28} className={`stroke-[2.5] ${active ? 'text-black' : 'text-comic-dark'}`} />
         </div>
-        <span className={`absolute left-20 top-1/2 -translate-y-1/2 bg-black text-white text-sm font-comic tracking-wider px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border-2 border-white shadow-lg z-50`}>
+        <span className={`absolute left-20 top-1/2 -translate-y-1/2 bg-white text-black text-sm font-comic tracking-wider px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border-2 border-black shadow-lg z-50`}>
             {label}
         </span>
     </Link>
@@ -31,11 +31,16 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 animate={{ x: 0 }}
                 className="w-24 m-4 mr-0 flex flex-col items-center py-8 bg-white border-4 border-black rounded-3xl shadow-comic z-50"
             >
-                <div className="mb-10">
-                    <div className="w-12 h-12 bg-comic-red rounded-full border-4 border-black flex items-center justify-center shadow-comic-sm">
-                        <Zap size={24} className="stroke-[3] text-white" />
-                    </div>
-                </div>
+                <Link to="/" className="mb-10 block">
+                    <motion.div
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-16 h-16 rounded-full border-4 border-black flex items-center justify-center shadow-comic-sm overflow-hidden cursor-pointer"
+                        style={{ backgroundColor: '#8B7355' }}
+                    >
+                        <img src="/sloth.svg" alt="ADHD Dashboard Logo" className="w-full h-full object-cover" />
+                    </motion.div>
+                </Link>
 
                 <div className="flex flex-col flex-1 w-full px-4 items-center">
                     <NavItem to="/" icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/'} />

@@ -11,6 +11,7 @@ interface AppState {
     assignments: GoogleCourseWork[];
     courseMaterials: GoogleCourseMaterial[];
     isLoading: boolean;
+    isInitialized: boolean;
     isDarkMode: boolean;
     setAuthenticated: (token: string) => void;
     setEvents: (events: GoogleEvent[]) => void;
@@ -19,6 +20,7 @@ interface AppState {
     setAssignments: (assignments: GoogleCourseWork[]) => void;
     setCourseMaterials: (materials: GoogleCourseMaterial[]) => void;
     setLoading: (loading: boolean) => void;
+    setInitialized: (initialized: boolean) => void;
     toggleTheme: () => void;
     logout: () => void;
 }
@@ -34,6 +36,7 @@ export const useAppStore = create<AppState>()(
             assignments: [],
             courseMaterials: [],
             isLoading: false,
+            isInitialized: false,
             isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
             setAuthenticated: (token) => set({ isAuthenticated: true, accessToken: token }),
             setEvents: (events) => set({ events }),
@@ -42,6 +45,7 @@ export const useAppStore = create<AppState>()(
             setAssignments: (assignments) => set({ assignments }),
             setCourseMaterials: (materials) => set({ courseMaterials: materials }),
             setLoading: (loading) => set({ isLoading: loading }),
+            setInitialized: (initialized) => set({ isInitialized: initialized }),
             toggleTheme: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
             logout: () => set({ isAuthenticated: false, accessToken: null, events: [], tasks: [], courses: [], assignments: [], courseMaterials: [] }),
         }),
@@ -57,6 +61,9 @@ export const useAppStore = create<AppState>()(
                 courseMaterials: state.courseMaterials,
                 isDarkMode: state.isDarkMode
             }),
+            onRehydrateStorage: () => (state) => {
+                state?.setInitialized(true);
+            },
         }
     )
 );

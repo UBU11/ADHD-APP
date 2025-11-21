@@ -1,176 +1,121 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Zap, Brain, Calendar, BookOpen } from 'lucide-react';
 
 export const Preloader = () => {
     const [progress, setProgress] = useState(0);
-    const [messageIndex, setMessageIndex] = useState(0);
-
-    const loadingMessages = [
-        { text: "POWERING UP...", icon: Zap },
-        { text: "SYNCING BRAIN...", icon: Brain },
-        { text: "LOADING CALENDAR...", icon: Calendar },
-        { text: "FETCHING CLASSROOM...", icon: BookOpen },
-        { text: "READY TO LAUNCH!", icon: Zap }
-    ];
 
     useEffect(() => {
         const progressInterval = setInterval(() => {
             setProgress(prev => {
-                if (prev >= 100) {
+                if (prev >= 99) {
                     clearInterval(progressInterval);
-                    return 100;
+                    return 99;
                 }
                 return prev + 2;
             });
-        }, 54);
-
-        const messageInterval = setInterval(() => {
-            setMessageIndex(prev => (prev + 1) % loadingMessages.length);
-        }, 1200);
+        }, 50);
 
         return () => {
             clearInterval(progressInterval);
-            clearInterval(messageInterval);
         };
     }, []);
-
-    const CurrentIcon = loadingMessages[messageIndex].icon;
 
     return (
         <motion.div
             initial={{ opacity: 1 }}
-            exit={{ y: "-100%", transition: { duration: 0.6, ease: "easeInOut" } }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-comic-yellow via-yellow-300 to-comic-yellow overflow-hidden"
+            exit={{
+                opacity: 0,
+                transition: { duration: 1 }
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black overflow-hidden"
         >
-            <div className="absolute inset-0 opacity-20" style={{
-                backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2px)',
-                backgroundSize: '40px 40px'
-            }} />
+            <div
+                className="absolute inset-0 pointer-events-none opacity-10"
+                style={{
+                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #fff 2px, #fff 4px)'
+                }}
+            />
 
-            <div className="relative z-10 text-center">
-                <motion.div
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        rotate: [0, 5, -5, 0]
-                    }}
-                    transition={{
-                        duration: 3.3,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    className="mb-8"
-                >
-                    <h1 className="text-9xl font-comic text-comic-dark tracking-wider uppercase transform -rotate-3 drop-shadow-[6px_6px_0_rgba(0,0,0,1)]">
-                        ADHD
-                    </h1>
-                    <p className="text-3xl font-comic text-comic-red mt-2 transform rotate-2">
-                        DASHBOARD
-                    </p>
-                </motion.div>
+            <div className="relative z-10 flex flex-col items-center gap-12">
 
-                <div className="flex items-center justify-center gap-4 mb-8">
-                    <motion.div
-                        key={messageIndex}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        className="flex items-center gap-3 bg-white px-8 py-4 border-4 border-black rounded-2xl shadow-comic"
-                    >
+                <div className="grid grid-cols-3 gap-4">
+                    {[...Array(9)].map((_, i) => (
                         <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        >
-                            <CurrentIcon size={32} className="stroke-[3] text-comic-blue" />
-                        </motion.div>
-                        <span className="text-2xl font-comic text-comic-dark">
-                            {loadingMessages[messageIndex].text}
-                        </span>
-                    </motion.div>
+                            key={i}
+                            animate={{
+                                opacity: [0.3, 1, 0.3],
+                                scale: [0.8, 1, 0.8]
+                            }}
+                            transition={{
+                                duration: 1.2,
+                                repeat: Infinity,
+                                delay: i * 0.15,
+                                ease: "easeInOut"
+                            }}
+                            className="w-12 h-12 border-4 border-comic-yellow"
+                        />
+                    ))}
                 </div>
 
-                <div className="w-96 mx-auto">
-                    <div className="bg-white border-4 border-black rounded-full h-8 overflow-hidden shadow-comic">
+                <div className="w-96">
+                    <div className="flex gap-2 mb-4">
+                        {[...Array(20)].map((_, i) => {
+                            const blockProgress = (i + 1) * 5;
+                            const isActive = progress >= blockProgress;
+
+                            return (
+                                <motion.div
+                                    key={i}
+                                    animate={{
+                                        opacity: isActive ? 1 : 0.2,
+                                        backgroundColor: isActive ? '#FFD93D' : '#333'
+                                    }}
+                                    transition={{ duration: 0.2 }}
+                                    className="flex-1 h-8 border-2 border-comic-yellow"
+                                />
+                            );
+                        })}
+                    </div>
+
+                    <div className="text-center">
                         <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${progress}%` }}
-                            transition={{ duration: 0.3 }}
-                            className="h-full bg-gradient-to-r from-comic-blue via-blue-500 to-comic-blue relative"
+                            key={progress}
+                            initial={{ scale: 1.2 }}
+                            animate={{ scale: 1 }}
+                            className="text-4xl font-mono font-bold text-comic-yellow tracking-widest"
+                            style={{
+                                textShadow: '0 0 10px rgba(255, 217, 61, 0.5)'
+                            }}
                         >
-                            <motion.div
-                                animate={{
-                                    x: ['-100%', '200%']
-                                }}
-                                transition={{
-                                    duration: 1.5,
-                                    repeat: Infinity,
-                                    ease: "linear"
-                                }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
-                            />
+                            {progress}%
                         </motion.div>
                     </div>
-                    <p className="text-xl font-body font-bold text-comic-dark mt-3">
-                        {progress}%
-                    </p>
                 </div>
 
-                <motion.div
-                    animate={{
-                        y: [0, -10, 0]
-                    }}
-                    transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    className="mt-12 flex justify-center gap-3"
-                >
+                <div className="flex gap-4">
                     {[0, 1, 2].map((i) => (
                         <motion.div
                             key={i}
                             animate={{
-                                scale: [1, 1.5, 1],
+                                y: [0, -15, 0],
                                 opacity: [0.5, 1, 0.5]
                             }}
                             transition={{
-                                duration: 1,
+                                duration: 0.8,
                                 repeat: Infinity,
-                                delay: i * 0.2
+                                delay: i * 0.2,
+                                ease: "easeInOut"
                             }}
-                            className="w-4 h-4 bg-comic-red border-2 border-black rounded-full"
+                            className="w-4 h-4 bg-comic-yellow"
                         />
                     ))}
-                </motion.div>
+                </div>
             </div>
 
-            <motion.div
-                animate={{
-                    rotate: 360
-                }}
-                transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                }}
-                className="absolute top-10 right-10 text-9xl opacity-10"
-            >
-                ⚡
-            </motion.div>
-
-            <motion.div
-                animate={{
-                    rotate: -360
-                }}
-                transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    ease: "linear"
-                }}
-                className="absolute bottom-10 left-10 text-9xl opacity-10"
-            >
-                🧠
-            </motion.div>
+            <div className="absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-comic-yellow" />
+            <div className="absolute top-8 right-8 w-16 h-16 border-r-4 border-t-4 border-comic-yellow" />
+            <div className="absolute bottom-8 left-8 w-16 h-16 border-l-4 border-b-4 border-comic-yellow" />
+            <div className="absolute bottom-8 right-8 w-16 h-16 border-r-4 border-b-4 border-comic-yellow" />
         </motion.div>
     );
 };

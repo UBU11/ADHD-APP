@@ -5,6 +5,7 @@ export interface GoogleEvent {
     summary: string;
     start: { dateTime?: string; date?: string };
     end: { dateTime?: string; date?: string };
+    location?: string;
 }
 
 export interface GoogleTask {
@@ -107,7 +108,6 @@ export const fetchCalendarEvents = async (): Promise<GoogleEvent[]> => {
 export const fetchTasks = async (): Promise<GoogleTask[]> => {
     if (!accessToken) throw new Error('No access token');
 
-    // First get task lists
     const listResponse = await fetch(
         'https://tasks.googleapis.com/tasks/v1/users/@me/lists',
         {
