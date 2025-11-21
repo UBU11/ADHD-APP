@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply transition-colors duration-300;
+  }
+
+  .dark body {
+    @apply bg-gray-900 text-white;
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+  }
+}
+
+@theme {
+  --font-comic: "Bangers", system-ui;
+  --font-body: "Roboto Condensed", system-ui;
+
+  --color-comic-red: #FF4D4D;
+  --color-comic-yellow: #FFD93D;
+  --color-comic-blue: #6BCB77;
+  --color-comic-dark: #1A1A1A;
+  --color-comic-paper: #F7F7F7;
+
+  --shadow-comic: 8px 8px 0px 0px #000000;
+  --shadow-comic-sm: 4px 4px 0px 0px #000000;
+  --shadow-comic-lg: 12px 12px 0px 0px #000000;
+}
+
+@layer utilities {
+  .comic-card {
+    @apply bg-comic-paper border-4 border-black shadow-comic rounded-xl;
+  }
+
+  .comic-button {
+    @apply font-comic tracking-wider uppercase border-4 border-black shadow-comic-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all active:translate-x-1 active:translate-y-1;
+  }
+
+  .comic-input {
+    @apply border-4 border-black rounded-lg p-3 font-body text-lg focus:outline-none focus:shadow-comic-sm transition-all;
+  }
+}
+
+:root {
+  font-family: "Roboto Condensed", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-comic-paper text-comic-dark font-body;
+  background-image: radial-gradient(#000 1px, transparent 1px);
+  background-size: 20px 20px;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.dark body {
+  @apply bg-gray-900 text-white;
+  background-image: radial-gradient(#fff 1px, transparent 1px);
+}
