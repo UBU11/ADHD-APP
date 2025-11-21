@@ -6,7 +6,7 @@
   }
 
   .dark body {
-    @apply bg-gray-900 text-white;
+    @apply bg-gray-900 text-black;
     background-image: radial-gradient(#fff 1px, transparent 1px);
   }
 }
@@ -54,6 +54,6 @@ body {
 }
 
 .dark body {
-  @apply bg-gray-900 text-white;
+  @apply bg-gray-900 text-black;
   background-image: radial-gradient(#fff 1px, transparent 1px);
 }

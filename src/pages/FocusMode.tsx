@@ -89,7 +89,7 @@ export const FocusMode = () => {
         return `${h > 0 ? h + ':' : ''}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    if (!activeTask) return <div className="p-8 text-center dark:text-white">No tasks available!</div>;
+    if (!activeTask) return <div className="p-8 text-center dark:text-black">No tasks available!</div>;
 
     return (
         <div className={`h-full flex flex-col items-center justify-center p-8 relative transition-colors duration-500 ${zenMode ? 'bg-black' : 'bg-comic-paper'}`}>
@@ -126,14 +126,14 @@ export const FocusMode = () => {
                     </div>
                 )}
 
-                <h1 className={`font-comic mb-8 leading-tight transition-all duration-500 uppercase tracking-wide ${zenMode ? 'text-6xl md:text-8xl text-white' : 'text-5xl md:text-7xl text-comic-dark drop-shadow-[4px_4px_0_rgba(0,0,0,0.2)]'}`}>
+                <h1 className={`font-comic mb-8 leading-tight transition-all duration-500 uppercase tracking-wide ${zenMode ? 'text-6xl md:text-8xl text-black' : 'text-5xl md:text-7xl text-comic-dark drop-shadow-[4px_4px_0_rgba(0,0,0,0.2)]'}`}>
                     {activeTask.title}
                 </h1>
 
                 {activeTask.dueDate && (
                     <div className="mb-12">
                         {!zenMode && <div className="text-lg font-bold text-comic-dark mb-2 uppercase tracking-widest">Time Remaining</div>}
-                        <div ref={timerRef} className={`font-mono font-bold tracking-tighter transition-colors duration-300 ${zenMode ? 'text-8xl md:text-9xl text-white/80' : 'text-7xl md:text-9xl text-comic-red drop-shadow-[4px_4px_0_#000]'}`}>
+                        <div ref={timerRef} className={`font-mono font-bold tracking-tighter transition-colors duration-300 ${zenMode ? 'text-8xl md:text-9xl text-black/80' : 'text-7xl md:text-9xl text-comic-red drop-shadow-[4px_4px_0_#000]'}`}>
                             {timeLeft}
                         </div>
                     </div>

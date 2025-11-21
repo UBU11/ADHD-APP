@@ -52,7 +52,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
                     <button
                         onClick={logout}
-                        className="p-4 rounded-xl bg-comic-red border-4 border-black text-white shadow-comic-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all w-full flex justify-center"
+                        className="p-4 rounded-xl bg-comic-red border-4 border-black text-black shadow-comic-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all w-full flex justify-center"
                     >
                         <LogOut size={24} className="stroke-[3]" />
                     </button>
