@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useAppStore } from '../store/useAppStore';
 
 export const Preloader = () => {
     const [progress, setProgress] = useState(0);
+    const { isLoading } = useAppStore();
 
     useEffect(() => {
         const progressInterval = setInterval(() => {
@@ -19,6 +21,13 @@ export const Preloader = () => {
             clearInterval(progressInterval);
         };
     }, []);
+
+    // When loading completes, finish the progress
+    useEffect(() => {
+        if (!isLoading && progress < 100) {
+            setProgress(100);
+        }
+    }, [isLoading, progress]);
 
     return (
         <motion.div
@@ -110,6 +119,7 @@ export const Preloader = () => {
                         />
                     ))}
                 </div>
+
             </div>
 
             <div className="absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-comic-yellow" />

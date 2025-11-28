@@ -5,7 +5,7 @@ import { differenceInHours, isPast } from 'date-fns';
 import { useState } from 'react';
 
 export const ClassroomView = () => {
-    const { courses, assignments, courseMaterials } = useAppStore();
+    const { courses, assignments, courseMaterials, totalScore, completedAssignments, addScore } = useAppStore();
     const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>(courses.map(c => c.id));
     const [showCourseSelector, setShowCourseSelector] = useState(false);
 
@@ -50,31 +50,36 @@ export const ClassroomView = () => {
     const filteredMaterials = courseMaterials.filter(m => selectedCourseIds.includes(m.courseId));
 
     return (
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
             <motion.header
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-12 text-center"
+                className="mb-8 sm:mb-10 md:mb-12 text-center"
             >
-                <h1 className="text-8xl font-comic text-comic-dark mb-4 tracking-wider uppercase transform -rotate-2 inline-block">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-comic text-comic-dark mb-4 tracking-wider uppercase transform -rotate-2 inline-block">
                     Classroom
                 </h1>
-                <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
-                    <div className="comic-card bg-comic-yellow px-6 py-3">
-                        <p className="text-2xl font-comic text-comic-dark">
+                <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-4 flex-wrap">
+                    <div className="comic-card bg-comic-yellow px-4 sm:px-5 md:px-6 py-2 sm:py-3">
+                        <p className="text-lg sm:text-xl md:text-2xl font-comic text-comic-dark">
                             {selectedCourseIds.length} / {courses.length} {courses.length === 1 ? 'Course' : 'Courses'}
                         </p>
                     </div>
-                    <div className="comic-card bg-comic-blue px-6 py-3">
-                        <p className="text-2xl font-comic text-black">
+                    <div className="comic-card bg-comic-blue px-4 sm:px-5 md:px-6 py-2 sm:py-3">
+                        <p className="text-lg sm:text-xl md:text-2xl font-comic text-black">
                             {filteredAssignments.length} {filteredAssignments.length === 1 ? 'Assignment' : 'Assignments'}
+                        </p>
+                    </div>
+                    <div className="comic-card bg-green-400 px-4 sm:px-5 md:px-6 py-2 sm:py-3">
+                        <p className="text-lg sm:text-xl md:text-2xl font-comic text-black flex items-center gap-2">
+                            ⭐ {totalScore} Points
                         </p>
                     </div>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setShowCourseSelector(!showCourseSelector)}
-                        className="comic-button bg-comic-red text-black px-6 py-3"
+                        className="comic-button bg-comic-red text-black px-4 sm:px-5 md:px-6 py-2 sm:py-3 text-base sm:text-lg md:text-xl"
                     >
                         {showCourseSelector ? 'Hide' : 'Select'} Courses
                     </motion.button>
@@ -267,15 +272,35 @@ export const ClassroomView = () => {
                                             )}
                                         </div>
 
-                                        <a
-                                            href={`https://classroom.google.com/c/${assignment.courseId}/a/${assignment.id}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 bg-comic-red text-black px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-red-600 transition-colors mt-4"
-                                        >
-                                            <ExternalLink size={18} />
-                                            Submit in Classroom
-                                        </a>
+                                        <div className="flex items-center gap-3 mt-4 flex-wrap">
+                                            <a
+                                                href={`https://classroom.google.com/c/${assignment.courseId}/a/${assignment.id}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 bg-comic-red text-black px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-red-600 transition-colors"
+                                            >
+                                                <ExternalLink size={18} />
+                                                Submit in Classroom
+                                            </a>
+                                            {!completedAssignments.includes(assignment.id) ? (
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                    onClick={() => {
+                                                        const points = assignment.maxPoints || 100;
+                                                        addScore(points, assignment.id);
+                                                    }}
+                                                    className="inline-flex items-center gap-2 bg-green-400 text-black px-4 py-2 rounded-lg border-2 border-black font-body font-bold hover:bg-green-500 transition-colors"
+                                                >
+                                                    <Award size={18} className="stroke-[2.5]" />
+                                                    Mark as Complete (+{assignment.maxPoints || 100} pts)
+                                                </motion.button>
+                                            ) : (
+                                                <div className="inline-flex items-center gap-2 bg-gray-300 text-black px-4 py-2 rounded-lg border-2 border-black font-body font-bold">
+                                                    ✓ Completed
+                                                </div>
+                                            )}
+                                        </div>
                                     </motion.div>
                                 );
                             })
@@ -372,6 +397,6 @@ export const ClassroomView = () => {
                     </div>
                 </motion.section>
             </div>
-        </div>
+        </div >
     );
 };

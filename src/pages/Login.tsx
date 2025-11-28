@@ -83,7 +83,7 @@ export const Login = () => {
     }, []);
 
     return (
-        <div ref={bgRef} className="h-screen w-screen flex items-center justify-center overflow-hidden relative cursor-none bg-comic-yellow">
+        <div ref={bgRef} className="h-screen w-screen flex items-center justify-center overflow-hidden relative md:cursor-none bg-comic-yellow">
             <motion.div
                 className="fixed top-0 left-0 rounded-full pointer-events-none z-50 hidden md:block"
                 variants={variants}
@@ -100,7 +100,7 @@ export const Login = () => {
                 initial={{ scale: 0.8, opacity: 0, rotate: -5 }}
                 animate={{ scale: 1, opacity: 1, rotate: 0 }}
                 transition={{ type: "spring", bounce: 0.5 }}
-                className="comic-card bg-white p-12 max-w-md w-full mx-4 z-10 relative"
+                className="comic-card bg-white p-6 sm:p-8 md:p-12 max-w-md w-full mx-4 z-10 relative"
             >
                 <div className="absolute -top-6 -right-6 w-12 h-12 bg-comic-blue border-4 border-black rounded-full z-20" />
 
@@ -110,7 +110,7 @@ export const Login = () => {
                     whileHover={{ scale: 1.1, rotate: 10 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="w-32 h-32 border-4 border-black rounded-full flex items-center justify-center mx-auto mb-6 shadow-comic-sm overflow-hidden cursor-pointer"
+                    className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 border-4 border-black rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-comic-sm overflow-hidden cursor-pointer"
                     style={{ backgroundColor: '#8B7355' }}
                 >
                     <motion.div
@@ -133,7 +133,7 @@ export const Login = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="text-6xl font-comic text-comic-dark mb-2 tracking-wider uppercase transform -rotate-2"
+                    className="text-4xl sm:text-5xl md:text-6xl font-comic text-comic-dark mb-2 tracking-wider uppercase transform -rotate-2 text-center"
                 >
                     Zanshin
                 </motion.h1>
@@ -142,7 +142,7 @@ export const Login = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.7 }}
-                    className="text-comic-dark font-body font-bold text-xl mb-10 uppercase tracking-tight"
+                    className="text-comic-dark font-body font-bold text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 uppercase tracking-tight text-center"
                 >
                     Master your time with <span className="text-comic-red underline decoration-4 decoration-black">Flow!</span>
                 </motion.p>
@@ -153,7 +153,7 @@ export const Login = () => {
                     onMouseEnter={() => setCursorVariant("hover")}
                     onMouseLeave={() => setCursorVariant("default")}
                     onClick={requestAccessToken}
-                    className="w-full py-4 px-6 bg-comic-blue text-black comic-button text-2xl flex items-center justify-center gap-3 group cursor-none"
+                    className="w-full py-3 sm:py-4 px-4 sm:px-6 bg-comic-blue text-black comic-button text-lg sm:text-xl md:text-2xl flex items-center justify-center gap-2 sm:gap-3 group md:cursor-none"
                 >
                     <div className="w-8 h-8 bg-white border-2 border-black rounded-full flex items-center justify-center">
                         <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
