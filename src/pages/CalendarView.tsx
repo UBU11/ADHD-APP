@@ -61,7 +61,7 @@ export const CalendarView = () => {
             </motion.header>
 
             <div className="space-y-6 sm:space-y-8">
-                {sortedDates.map((date, dateIndex) => {
+                {sortedDates.map((date) => {
                     const dateObj = parseISO(date);
                     const isPastDate = isPast(dateObj) && !isToday(dateObj);
 
@@ -70,7 +70,7 @@ export const CalendarView = () => {
                             key={date}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: dateIndex * 0.1 }}
+                            transition={{ duration: 0.3 }}
                         >
                             <div className="mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
                                 <div className={`${getDateColor(date)} px-4 sm:px-5 md:px-6 py-2 sm:py-3 border-4 border-black rounded-xl shadow-comic-sm inline-block`}>
@@ -95,7 +95,7 @@ export const CalendarView = () => {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                                {groupedEvents[date].map((event, eventIndex) => {
+                                {groupedEvents[date].map((event) => {
                                     const startTime = event.start.dateTime ? parseISO(event.start.dateTime) : null;
                                     const endTime = event.end?.dateTime ? parseISO(event.end.dateTime) : null;
 
@@ -104,7 +104,7 @@ export const CalendarView = () => {
                                             key={event.id}
                                             initial={{ opacity: 0, scale: 0.9 }}
                                             animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: dateIndex * 0.1 + eventIndex * 0.05 }}
+                                            transition={{ duration: 0.3 }}
                                             whileHover={{ scale: 1.02, rotate: 1 }}
                                             className="comic-card bg-white p-4 sm:p-5 md:p-6 group cursor-pointer relative overflow-hidden"
                                         >

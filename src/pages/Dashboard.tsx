@@ -41,7 +41,7 @@ const Countdown = ({ date }: { date?: Date }) => {
     return <span className="font-mono text-sm sm:text-base md:text-lg">{timeStr}</span>;
 };
 
-const TaskCard = ({ item, index }: { item: PrioritizedItem; index: number }) => {
+const TaskCard = ({ item }: { item: PrioritizedItem }) => {
     const navigate = useNavigate();
 
     const urgencyStyles = {
@@ -55,7 +55,7 @@ const TaskCard = ({ item, index }: { item: PrioritizedItem; index: number }) => 
         <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1, type: "spring" }}
+            transition={{ type: "spring" }}
             whileHover={{ scale: 1.02, rotate: 1 }}
             onClick={() => navigate('/focus', { state: { taskId: item.id } })}
             className="comic-card p-0 overflow-hidden cursor-pointer group relative bg-white"
@@ -115,8 +115,8 @@ export const Dashboard = () => {
 
             <div className="grid gap-6">
                 <AnimatePresence>
-                    {prioritizedItems.map((item, index) => (
-                        <TaskCard key={item.id} item={item} index={index} />
+                    {prioritizedItems.map((item) => (
+                        <TaskCard key={item.id} item={item} />
                     ))}
                 </AnimatePresence>
 

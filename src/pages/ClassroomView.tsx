@@ -157,12 +157,12 @@ export const ClassroomView = () => {
                                 <p className="text-2xl font-body text-gray-500">No courses selected. Click "Select Courses" above!</p>
                             </div>
                         ) : (
-                            courses.filter(c => selectedCourseIds.includes(c.id)).map((course, idx) => (
+                            courses.filter(c => selectedCourseIds.includes(c.id)).map((course) => (
                                 <motion.div
                                     key={course.id}
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: idx * 0.05 }}
+                                    transition={{ duration: 0.3 }}
                                     whileHover={{ scale: 1.02, rotate: 1 }}
                                     className="comic-card bg-gradient-to-br from-comic-yellow to-yellow-300 p-6"
                                 >
@@ -216,7 +216,7 @@ export const ClassroomView = () => {
                                 </p>
                             </div>
                         ) : (
-                            filteredAssignments.map((assignment, idx) => {
+                            filteredAssignments.map((assignment) => {
                                 const course = getCourseById(assignment.courseId);
                                 const dueDate = assignment.dueDate
                                     ? new Date(
@@ -234,7 +234,7 @@ export const ClassroomView = () => {
                                         key={assignment.id}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: idx * 0.03 }}
+                                        transition={{ duration: 0.3 }}
                                         whileHover={{ scale: 1.02 }}
                                         className="comic-card bg-white p-6 group relative overflow-hidden"
                                     >
@@ -327,14 +327,14 @@ export const ClassroomView = () => {
                                 </p>
                             </div>
                         ) : (
-                            filteredMaterials.map((material, idx) => {
+                            filteredMaterials.map((material) => {
                                 const course = getCourseById(material.courseId);
                                 return (
                                     <motion.div
                                         key={material.id}
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: idx * 0.05 }}
+                                        transition={{ duration: 0.3 }}
                                         whileHover={{ scale: 1.05, rotate: -1 }}
                                         className="comic-card bg-gradient-to-br from-comic-blue to-blue-400 p-6 text-black"
                                     >
