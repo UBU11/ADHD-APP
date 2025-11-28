@@ -255,7 +255,7 @@ export const deleteEvent = async (eventId: string): Promise<boolean> => {
     }
 
     try {
-        console.log('Attempting to delete event:', eventId);
+
         const response = await fetch(
             `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
             {
@@ -266,7 +266,7 @@ export const deleteEvent = async (eventId: string): Promise<boolean> => {
             }
         );
 
-        console.log('Delete event response status:', response.status);
+
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -274,7 +274,7 @@ export const deleteEvent = async (eventId: string): Promise<boolean> => {
             return false;
         }
 
-        console.log('Event deleted successfully');
+
         return true;
     } catch (error) {
         console.error('Error deleting event:', error);

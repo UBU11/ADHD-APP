@@ -36,7 +36,7 @@ function App() {
 
       const syncData = async () => {
         try {
-          console.log('Syncing Google data...');
+
           const [events, tasks, courses] = await Promise.all([
             fetchCalendarEvents(),
             fetchTasks(),
@@ -55,7 +55,7 @@ function App() {
             setAssignments(assignments);
             setCourseMaterials(materials);
           }
-          console.log('Sync complete');
+
         } catch (error) {
           console.error('Sync failed:', error);
           // If token is invalid/expired, logout to force re-auth
