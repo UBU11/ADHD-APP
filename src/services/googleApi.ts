@@ -1,5 +1,5 @@
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
-const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.coursework.me.readonly https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly';
+const SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.coursework.me.readonly https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly';
 export interface GoogleEvent {
     id: string;
     summary: string;
@@ -187,7 +187,9 @@ export const fetchCourseMaterials = async (): Promise<GoogleCourseMaterial[]> =>
                 {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 }
-            );
+            )
+
+                ;
 
             const data = await response.json();
             if (data.courseWorkMaterial) {
@@ -199,4 +201,79 @@ export const fetchCourseMaterials = async (): Promise<GoogleCourseMaterial[]> =>
     }
 
     return allMaterials;
+};
+
+export const completeTask = async (taskId: string, taskListId?: string): Promise<boolean> => {
+    if (!accessToken) throw new Error('No access token');
+
+    try {
+        // If no taskListId provided, get the default list
+        let listId = taskListId;
+        if (!listId) {
+            const listResponse = await fetch(
+                'https://tasks.googleapis.com/tasks/v1/users/@me/lists',
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                }
+            );
+            const listData = await listResponse.json();
+            listId = listData.items?.[0]?.id;
+        }
+
+        if (!listId) throw new Error('No task list found');
+
+        // Mark task as completed
+        const response = await fetch(
+            `https://tasks.googleapis.com/tasks/v1/lists/${listId}/tasks/${taskId}`,
+            {
+                method: 'PATCH',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: 'completed'
+                }),
+            }
+        );
+
+        return response.ok;
+    } catch (error) {
+        console.error('Error completing task:', error);
+        return false;
+    }
+};
+
+export const deleteEvent = async (eventId: string): Promise<boolean> => {
+    if (!accessToken) {
+        console.error('No access token available');
+        throw new Error('No access token');
+    }
+
+    try {
+        console.log('Attempting to delete event:', eventId);
+        const response = await fetch(
+            `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+        console.log('Delete event response status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to delete event:', response.status, errorText);
+            return false;
+        }
+
+        console.log('Event deleted successfully');
+        return true;
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        return false;
+    }
 };

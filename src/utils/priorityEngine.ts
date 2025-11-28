@@ -39,7 +39,7 @@ export const formatRemainingTime = (dueDate: Date): string => {
     }
 };
 
-export const prioritizeItems = (tasks: GoogleTask[], events: GoogleEvent[], assignments: GoogleCourseWork[] = []): PrioritizedItem[] => {
+export const prioritizeItems = (tasks: GoogleTask[], events: GoogleEvent[], assignments: GoogleCourseWork[] = [], excludeEvents: boolean = false): PrioritizedItem[] => {
     const items: PrioritizedItem[] = [];
 
 
@@ -97,23 +97,26 @@ export const prioritizeItems = (tasks: GoogleTask[], events: GoogleEvent[], assi
         }
     });
 
-    events.forEach(event => {
-        const startStr = event.start.dateTime || event.start.date;
-        if (!startStr) return;
+    // Only include events if not excluded
+    if (!excludeEvents) {
+        events.forEach(event => {
+            const startStr = event.start.dateTime || event.start.date;
+            if (!startStr) return;
 
-        const startDate = parseISO(startStr);
+            const startDate = parseISO(startStr);
 
-        items.push({
-            id: event.id,
-            title: event.summary,
-            type: 'event',
-            dueDate: startDate,
-            urgency: calculateUrgency(startDate),
-            remainingTimeStr: formatRemainingTime(startDate),
-            isOverdue: isPast(startDate),
-            originalData: event
+            items.push({
+                id: event.id,
+                title: event.summary,
+                type: 'event',
+                dueDate: startDate,
+                urgency: calculateUrgency(startDate),
+                remainingTimeStr: formatRemainingTime(startDate),
+                isOverdue: isPast(startDate),
+                originalData: event
+            });
         });
-    });
+    }
 
     return items.sort((a, b) => {
         if (a.isOverdue && !b.isOverdue) return -1;
