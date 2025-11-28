@@ -10,6 +10,7 @@ import { ClassroomView } from './pages/ClassroomView';
 import { Settings } from './pages/Settings';
 import { useAppStore } from './store/useAppStore';
 import { Preloader } from './components/Preloader';
+import { fetchCalendarEvents, fetchTasks, fetchCourses, fetchCourseWork, fetchCourseMaterials, setAccessToken } from './services/googleApi';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useAppStore();
@@ -17,7 +18,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 function App() {
-  const { isDarkMode, isLoading, isInitialized } = useAppStore();
+  const { isDarkMode, isLoading, isInitialized, isAuthenticated, accessToken, setEvents, setTasks, setCourses, setAssignments, setCourseMaterials, logout } = useAppStore();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -26,6 +27,52 @@ function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  // Live Sync Effect
+  useEffect(() => {
+    if (isAuthenticated && accessToken) {
+      // Restore the token to the API client
+      setAccessToken(accessToken);
+
+      const syncData = async () => {
+        try {
+          console.log('Syncing Google data...');
+          const [events, tasks, courses] = await Promise.all([
+            fetchCalendarEvents(),
+            fetchTasks(),
+            fetchCourses()
+          ]);
+
+          setEvents(events);
+          setTasks(tasks);
+          setCourses(courses);
+
+          if (courses.length > 0) {
+            const [assignments, materials] = await Promise.all([
+              fetchCourseWork(),
+              fetchCourseMaterials()
+            ]);
+            setAssignments(assignments);
+            setCourseMaterials(materials);
+          }
+          console.log('Sync complete');
+        } catch (error) {
+          console.error('Sync failed:', error);
+          // If token is invalid/expired, logout to force re-auth
+          if (error instanceof Error && (error.message.includes('401') || error.message.includes('No access token'))) {
+            logout();
+          }
+        }
+      };
+
+      // Initial sync on mount
+      syncData();
+
+      // Poll every 2 minutes
+      const interval = setInterval(syncData, 2 * 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated, accessToken, setEvents, setTasks, setCourses, setAssignments, setCourseMaterials, logout]);
 
   const showPreloader = !isInitialized || isLoading;
 

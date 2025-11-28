@@ -89,6 +89,10 @@ export const requestAccessToken = () => {
     }
 };
 
+export const setAccessToken = (token: string) => {
+    accessToken = token;
+};
+
 export const fetchCalendarEvents = async (): Promise<GoogleEvent[]> => {
     if (!accessToken) throw new Error('No access token');
 

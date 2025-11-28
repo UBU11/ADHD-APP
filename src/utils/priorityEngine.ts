@@ -1,5 +1,5 @@
 import type { GoogleTask, GoogleEvent, GoogleCourseWork } from '../services/googleApi';
-import { differenceInHours, differenceInMinutes, parseISO, isPast } from 'date-fns';
+import { differenceInDays, parseISO, isPast, isToday, isTomorrow } from 'date-fns';
 
 export type UrgencyLevel = 'critical' | 'high' | 'medium' | 'low';
 
@@ -7,83 +7,140 @@ export interface PrioritizedItem {
     id: string;
     title: string;
     type: 'task' | 'event' | 'assignment';
-    dueDate?: Date;
+    dueDate: Date;
     urgency: UrgencyLevel;
     remainingTimeStr: string;
     isOverdue: boolean;
     originalData: GoogleTask | GoogleEvent | GoogleCourseWork;
 }
 
-export const calculateUrgency = (dueDate: Date): UrgencyLevel => {
-    const now = new Date();
-    const hoursRemaining = differenceInHours(dueDate, now);
+const calculateUrgency = (dueDate: Date): UrgencyLevel => {
+    if (isPast(dueDate) && !isToday(dueDate)) return 'critical';
+    if (isToday(dueDate)) return 'critical';
+    if (isTomorrow(dueDate)) return 'high';
 
-    if (isPast(dueDate)) return 'critical';
-    if (hoursRemaining < 24) return 'high';
-    if (hoursRemaining < 72) return 'medium';
+    const days = differenceInDays(dueDate, new Date());
+    if (days < 3) return 'high';
+    if (days < 7) return 'medium';
     return 'low';
 };
 
-export const formatRemainingTime = (dueDate: Date): string => {
-    const now = new Date();
+const formatRemainingTime = (dueDate: Date): string => {
+    if (isToday(dueDate)) return 'Today';
     if (isPast(dueDate)) return 'Overdue';
+    if (isTomorrow(dueDate)) return 'Tomorrow';
 
-    const hours = differenceInHours(dueDate, now);
-    const minutes = differenceInMinutes(dueDate, now) % 60;
+    const days = differenceInDays(dueDate, new Date());
+    if (days === 0) return 'Today';
+    return `${days} Days`;
+};
+
+const formatEventTime = (date: Date): string => {
+    const now = new Date();
+    const diffMs = date.getTime() - now.getTime();
+
+    if (diffMs <= 0) return 'Started';
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
     if (hours < 24) {
         return `${hours}h ${minutes}m`;
-    } else {
-        const days = Math.floor(hours / 24);
-        return `${days}d ${hours % 24}h`;
     }
+    const days = Math.floor(hours / 24);
+    return `${days}d ${hours % 24}h`;
 };
 
 export const prioritizeItems = (tasks: GoogleTask[], events: GoogleEvent[], assignments: GoogleCourseWork[] = [], excludeEvents: boolean = false): PrioritizedItem[] => {
     const items: PrioritizedItem[] = [];
 
+    // Process Events
+    if (!excludeEvents) {
+        events.forEach(event => {
+            if (event.start?.dateTime || event.start?.date) {
+                const dueDate = parseISO(event.start.dateTime || event.start.date || '');
+                items.push({
+                    id: event.id,
+                    title: event.summary,
+                    type: 'event',
+                    dueDate,
+                    urgency: calculateUrgency(dueDate),
+                    remainingTimeStr: formatEventTime(dueDate),
+                    isOverdue: isPast(dueDate) && !isToday(dueDate),
+                    originalData: event
+                });
+            }
+        });
+    }
 
+    // Process Tasks
     tasks.forEach(task => {
+        if (!task.due) return;
+
+        // Parse the task due date string
+        let dueDate = new Date(task.due);
+        const isAllDay = task.due.includes('T00:00:00');
+
+        // If it's an all-day task (midnight UTC), we treat it as due at the END of that day in local time
+        if (isAllDay) {
+            dueDate.setHours(23, 59, 59, 999);
+        }
+
+        const now = new Date();
+        const isOverdue = dueDate < now;
+
+        // Calculate urgency based on time remaining
+        const diffHours = (dueDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+        let urgency: 'critical' | 'high' | 'medium' | 'low' = 'low';
+        if (isOverdue) urgency = 'critical';
+        else if (diffHours < 24) urgency = 'high';
+        else if (diffHours < 48) urgency = 'medium';
+
+        // Format remaining time string
+        let remainingTimeStr = '';
+        if (isOverdue) {
+            remainingTimeStr = 'Overdue';
+        } else if (isToday(dueDate)) {
+            remainingTimeStr = 'Today';
+        } else if (isTomorrow(dueDate)) {
+            remainingTimeStr = 'Tomorrow';
+        } else {
+            const days = Math.ceil(diffHours / 24);
+            remainingTimeStr = `${days} Days`;
+        }
+
+        items.push({
+            id: task.id,
+            title: task.title,
+            type: 'task',
+            urgency,
+            dueDate,
+            originalData: task,
+            isOverdue,
+            remainingTimeStr
+        });
+    });
+
+    // Process Assignments
+    assignments.forEach(assignment => {
         let dueDate: Date | undefined;
-        if (task.due) {
-            dueDate = parseISO(task.due);
+        if (assignment.dueDate) {
+            // Combine date and time if available, otherwise default to end of day
+            const year = assignment.dueDate.year;
+            const month = assignment.dueDate.month - 1; // Month is 0-indexed
+            const day = assignment.dueDate.day;
+
+            if (assignment.dueTime) {
+                const hours = assignment.dueTime.hours || 0;
+                const minutes = assignment.dueTime.minutes || 0;
+                dueDate = new Date(year, month, day, hours, minutes);
+            } else {
+                dueDate = new Date(year, month, day, 23, 59, 59);
+            }
         }
 
         if (dueDate) {
-            items.push({
-                id: task.id,
-                title: task.title,
-                type: 'task',
-                dueDate,
-                urgency: calculateUrgency(dueDate),
-                remainingTimeStr: formatRemainingTime(dueDate),
-                isOverdue: isPast(dueDate),
-                originalData: task
-            });
-        } else {
-
-            items.push({
-                id: task.id,
-                title: task.title,
-                type: 'task',
-                urgency: 'low',
-                remainingTimeStr: 'No deadline',
-                isOverdue: false,
-                originalData: task
-            });
-        }
-    });
-
-    assignments.forEach(assignment => {
-        if (assignment.dueDate) {
-            const dueDate = new Date(
-                assignment.dueDate.year,
-                assignment.dueDate.month - 1,
-                assignment.dueDate.day,
-                assignment.dueTime?.hours || 23,
-                assignment.dueTime?.minutes || 59
-            );
-
             items.push({
                 id: assignment.id,
                 title: assignment.title,
@@ -91,51 +148,11 @@ export const prioritizeItems = (tasks: GoogleTask[], events: GoogleEvent[], assi
                 dueDate,
                 urgency: calculateUrgency(dueDate),
                 remainingTimeStr: formatRemainingTime(dueDate),
-                isOverdue: isPast(dueDate),
+                isOverdue: isPast(dueDate) && !isToday(dueDate),
                 originalData: assignment
             });
         }
     });
 
-    // Only include events if not excluded
-    if (!excludeEvents) {
-        events.forEach(event => {
-            const startStr = event.start.dateTime || event.start.date;
-            if (!startStr) return;
-
-            const startDate = parseISO(startStr);
-
-            items.push({
-                id: event.id,
-                title: event.summary,
-                type: 'event',
-                dueDate: startDate,
-                urgency: calculateUrgency(startDate),
-                remainingTimeStr: formatRemainingTime(startDate),
-                isOverdue: isPast(startDate),
-                originalData: event
-            });
-        });
-    }
-
-    return items.sort((a, b) => {
-        if (a.isOverdue && !b.isOverdue) return -1;
-        if (!a.isOverdue && b.isOverdue) return 1;
-
-
-        const urgencyWeight = { critical: 0, high: 1, medium: 2, low: 3 };
-        if (urgencyWeight[a.urgency] !== urgencyWeight[b.urgency]) {
-            return urgencyWeight[a.urgency] - urgencyWeight[b.urgency];
-        }
-
-
-        if (a.dueDate && b.dueDate) {
-            return a.dueDate.getTime() - b.dueDate.getTime();
-        }
-
-        if (a.dueDate && !b.dueDate) return -1;
-        if (!a.dueDate && b.dueDate) return 1;
-
-        return 0;
-    });
+    return items.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 };

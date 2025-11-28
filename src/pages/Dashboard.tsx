@@ -1,48 +1,11 @@
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../store/useAppStore';
 import { prioritizeItems, type PrioritizedItem } from '../utils/priorityEngine';
 import { Clock, ShieldAlert, ShieldCheck, Zap, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { differenceInHours, differenceInMinutes, isPast } from 'date-fns';
 import type { GoogleCourseWork } from '../services/googleApi';
 
-const Countdown = ({ date }: { date?: Date }) => {
-    const [timeStr, setTimeStr] = useState('');
-
-    useEffect(() => {
-        if (!date) {
-            setTimeStr('No Deadline');
-            return;
-        }
-
-        const update = () => {
-            if (isPast(date)) {
-                setTimeStr('OVERDUE!');
-                return;
-            }
-
-            const now = new Date();
-            const hours = differenceInHours(date, now);
-            const minutes = differenceInMinutes(date, now) % 60;
-
-            if (hours < 24) {
-                setTimeStr(`${hours}h ${minutes}m`);
-            } else {
-                const days = Math.floor(hours / 24);
-                setTimeStr(`${days}d ${hours % 24}h`);
-            }
-        };
-
-        update();
-        const interval = setInterval(update, 60000);
-        return () => clearInterval(interval);
-    }, [date]);
-
-    return <span className="font-mono text-sm sm:text-base md:text-lg">{timeStr}</span>;
-};
-
-const TaskCard = ({ item }: { item: PrioritizedItem }) => {
+const TaskCard = ({ item, index = 0 }: { item: PrioritizedItem; index?: number }) => {
     const navigate = useNavigate();
 
     const urgencyStyles = {
@@ -65,11 +28,22 @@ const TaskCard = ({ item }: { item: PrioritizedItem }) => {
         window.open(url, '_blank');
     };
 
+    const isUrgent = () => {
+        const now = new Date();
+        const diffMs = item.dueDate.getTime() - now.getTime();
+        const diffHours = diffMs / (1000 * 60 * 60);
+        return diffHours > 0 && diffHours < 12;
+    };
+
+    const urgentClass = isUrgent()
+        ? "bg-red-500 text-white animate-pulse border-red-700"
+        : "bg-white text-black";
+
     return (
         <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ type: "spring" }}
+            transition={{ type: "spring", delay: index * 0.05 }}
             whileHover={{ scale: 1.02, rotate: 1 }}
             onClick={handleCardClick}
             className={`comic-card p-0 overflow-hidden group relative bg-white ${item.type === 'assignment' ? '' : 'cursor-pointer'}`}
@@ -95,10 +69,10 @@ const TaskCard = ({ item }: { item: PrioritizedItem }) => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
-                    <div className={`px-3 sm:px-4 py-2 border-4 border-black rounded-lg font-bold flex items-center gap-2 shadow-comic-sm bg-white text-black text-sm sm:text-base`}>
+                    <div className={`px-3 sm:px-4 py-2 border-4 border-black rounded-lg font-bold flex items-center gap-2 shadow-comic-sm text-sm sm:text-base ${urgentClass}`}>
                         <Clock size={18} className="stroke-[3] sm:hidden" />
                         <Clock size={20} className="stroke-[3] hidden sm:block" />
-                        <Countdown date={item.dueDate} />
+                        <span className="font-mono text-sm sm:text-base md:text-lg">{item.remainingTimeStr}</span>
                     </div>
 
                     {item.type === 'assignment' && (
@@ -173,8 +147,8 @@ export const Dashboard = () => {
 
             <div className="grid gap-6">
                 <AnimatePresence>
-                    {prioritizedItems.map((item) => (
-                        <TaskCard key={item.id} item={item} />
+                    {prioritizedItems.map((item, index) => (
+                        <TaskCard key={item.id} item={item} index={index} />
                     ))}
                 </AnimatePresence>
 
